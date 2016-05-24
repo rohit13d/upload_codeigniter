@@ -21,18 +21,31 @@ class home extends CI_Controller
 	 {
 		 $this->load->view('header');
 		 $this->load->view('nav');
+		 $this->form_validation->set_rules("datepicker", "ReportDate", "trim|required");
+         $this->form_validation->set_rules("product_type", "ReportType", "trim|required");
 		 $report_date = $this->input->post("datepicker");
 		 $report_type= $this->input->post("product_type");
+		 
 		 $report_date=strtotime($report_date);
 		 $newformat = date('Y-m-d',$report_date);
-		 $report_id=$this->app_model->insert_report($report_type, $newformat);
-		 echo $report_id; 
-		 $this->load->view("upload_articles"); 
+		 if ($this->form_validation->run() == FALSE)
+          {
+               //validation fails
+               $this->load->view('upload_report');
+			   echo "Fill Values in Mandatory fields";
+          }
+		  else
+		  {
+			$report_id=$this->app_model->insert_report($report_type, $newformat);
+			echo $report_id; 
+			$this->load->view("upload_articles"); 
+		  }
 		 
 	 }
 	 public function update()
 	 {
 		 $this->load->view('header');
+		 
 		 $this->load->view('nav');
 		 $this->load->view("test"); 
 		 
